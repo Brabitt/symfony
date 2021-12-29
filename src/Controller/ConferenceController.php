@@ -10,24 +10,24 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig\Environment;
+
 
 class ConferenceController extends AbstractController
 {
     #[Route('/conference', name: 'conference')]
     public function index(ManagerRegistry $doctrine): Response
     {
-        // instanciando Conference
+        // instancing Conference
         $conference = new Conference();
         $conference->setCity('Germany');
         $conference->setYear('2021');
         $conference->setIsInternational(true);
 
-        // instanciando Comments
+        // instancing Comments
 
         $comment = new Comment();
         $comment->setAuthor('Alex');
-        $comment->setCreatedAt(date_create_immutable( 'now'));
+        $comment->setCreatedAt(date_create_immutable('now'));
         $comment->setEmail('test@gmail.com');
         $comment->setText('lorem impsun sdfdf erfgd dfgdfgdfg ');
 
@@ -49,16 +49,25 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    // llamamdo al repositorio conference para acceder a los queries;
+    // calling the conference repository to access the queries;
     public function home(ConferenceRepository $conferenceRepository): Response
     {
         $conferences = $conferenceRepository->findAll();
-        return$this->render('conference/index.html.twig', [ 'conferences' => $conferences]);
+        return $this->render('conference/index.html.twig', [ 'conferences' => $conferences]);
     }
 
-    #[Route('/', name: 'home')]
-    public function showComments(CommentRepository $commentRepository): Response{
-
+    #[Route('/conference/{id}', name: 'conference')]
+    public function show(CommentRepository $commentRepository, Conference $conference): Response
+    // function that returns the comments of the conferences.
+    {
+        $comments = $commentRepository->findBy(
+            ['conference' => $conference],
+            ['createdAt' => 'DESC']
+        );
+        return $this->render('conference/showComments.html.twig',
+             ['conference' => $conference,
+              'comments' => $comments
+             ]);
     }
 
 }
