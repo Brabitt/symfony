@@ -8,6 +8,7 @@ use App\Repository\CommentRepository;
 use App\Repository\ConferenceRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
@@ -20,17 +21,17 @@ class ConferenceController extends AbstractController
     {
         // instancing Conference
         $conference = new Conference();
-        $conference->setCity('Peru');
-        $conference->setYear('2000');
+        $conference->setCity('Germany');
+        $conference->setYear('2021');
         $conference->setIsInternational(true);
 
         // instancing Comments
 
         $comment = new Comment();
-        $comment->setAuthor('Alicia');
+        $comment->setAuthor('Gavi');
         $comment->setCreatedAt(date_create_immutable('now'));
-        $comment->setEmail('Alicia@gmail.com');
-        $comment->setText('great job!');
+        $comment->setEmail('Gavi@gmail.com');
+        $comment->setText('nice work!');
 
 
         // relation
@@ -59,17 +60,21 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/{id}', name: 'conference')]
-    public function show(Environment $twig, CommentRepository $commentRepository, Conference $conference): Response
-    // function that returns the comments of the conferences.
+    public function show(Request $request, Environment $twig, CommentRepository $commentRepository, Conference $conference): Response
+    // function that returns the comments of the conferences with a paginator for the comments .
     {
-        $comments = $commentRepository->findBy(
-            ['conference' => $conference],
-            ['createdAt' => 'DESC']
-        );
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $commentRepository->CommentPaginator($conference, $offset);
+
         return new Response($twig->render('conference/showComments.html.twig',
-             ['conference' => $conference,
-              'comments' => $comments
-             ]));
+             [
+                 'conference' => $conference,
+                 'comments' => $paginator,
+                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                 'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+             ]
+            )
+        );
     }
 
 }
