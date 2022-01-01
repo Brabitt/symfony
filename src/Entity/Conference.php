@@ -27,6 +27,9 @@ class Conference
     #[ORM\OneToMany(mappedBy: 'conference', targetEntity: Comment::class, orphanRemoval: true)]
     private $comments;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $photo;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -105,5 +108,17 @@ class Conference
     public function __toString(): string
     {
         return $this->getCity(). ' ' .$this->getYear();
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
     }
 }
