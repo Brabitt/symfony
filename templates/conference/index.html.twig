@@ -3,14 +3,25 @@
 {% block title %}Conference Guestbook{% endblock %}
 
 {% block body %}
-    <h2>Give your feedback!</h2>
+    <div class="container-fluid text-md-center p-4">
+        <h2>conferences </h2>
+    </div>
+
 
     {% for conference in conferences %}
+        <div class="container col-md-4 ">
+            <div class="card-deck p-2">
+                <div class="card">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiA981wQvQHuKXZ1icjhBH6vKF_OuwJC2ZMw&usqp=CAU" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ conference }}</h5>
+                        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                    </div>
+                    <p><a href="{{ path('conference', { id: conference.id }) }}">View</a></p>
+                </div>
+            </div>
+        </div>
 
-        <h2>{{ conference }}</h2>
 
-        <p>
-            <a href="{{ path('conference', { id: conference.id }) }}">View</a>
-        </p>
     {% endfor %}
 {% endblock %}
