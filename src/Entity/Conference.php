@@ -30,6 +30,12 @@ class Conference
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $photo;
 
+    #[ORM\Column(type: 'text', nullable: false)]
+    private $description;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private $theme;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -118,6 +124,30 @@ class Conference
     public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTheme(): ?string
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(string $theme): self
+    {
+        $this->theme = $theme;
 
         return $this;
     }
