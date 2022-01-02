@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="container-fluid text-md-center p-4">
-        <h2>conferences </h2>
+        <h2>conferences</h2>
     </div>
 
 
@@ -18,7 +18,8 @@
                         <h6 class="card-text">{{ conference.theme }}</h6>
                         <p class="card-text">{{ conference.description }}</p>
                     </div>
-                    <p><a href="{{ path('conference', { id: conference.id }) }}">View</a></p>
+                    <a  class="btn btn-light" href="{{ path('conference', { id: conference.id }) }}">View</a>
+
                 </div>
             </div>
         </div>
